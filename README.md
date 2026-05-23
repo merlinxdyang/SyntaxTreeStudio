@@ -112,6 +112,6 @@ The source code lives in `src/`. The main interface is in `src/App.tsx`, tree pa
 
 ## License
 
-No license has been declared yet. Contact Merlin Yang before reusing or redistributing this project.
+This project is released under the MIT License. See [LICENSE](LICENSE) for details.
 
-当前尚未声明开源许可证。如需复用或重新分发本项目，请先联系 Merlin Yang。
+本项目使用 MIT 许可证发布。详情见 [LICENSE](LICENSE)。
