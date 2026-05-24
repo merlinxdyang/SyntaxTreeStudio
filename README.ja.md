@@ -69,36 +69,6 @@ Password: admin123456
 
 ローカル開発以外で使う前に、必ずこのパスワードを変更してください。
 
-## OAuth 設定
-
-Google Cloud Console と GitHub Developer Settings で OAuth App を作成します。
-
-ローカル開発用 callback URL：
-
-```text
-http://127.0.0.1:8082/index.php?action=oauth_callback&provider=google
-http://127.0.0.1:8082/index.php?action=oauth_callback&provider=github
-```
-
-公開サイト用 callback URL：
-
-```text
-https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=google
-https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=github
-```
-
-PHP 起動前に環境変数を設定します。
-
-```bash
-export SYNTREE_BASE_URL="https://ailinguistics.cloud/mss"
-export SYNTREE_GOOGLE_CLIENT_ID="..."
-export SYNTREE_GOOGLE_CLIENT_SECRET="..."
-export SYNTREE_GITHUB_CLIENT_ID="..."
-export SYNTREE_GITHUB_CLIENT_SECRET="..."
-```
-
-プロバイダーが未設定の場合、そのログインボタンは無効になります。
-
 ## Buy Me a Coffee
 
 このツールが授業、研究、執筆に役立った場合は、コーヒーでサポートできます。

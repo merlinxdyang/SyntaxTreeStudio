@@ -69,36 +69,6 @@ Password: admin123456
 
 Change that password before using the app outside local development.
 
-## OAuth Setup
-
-Create OAuth apps in Google Cloud Console and GitHub Developer Settings.
-
-For local development, use these callback URLs:
-
-```text
-http://127.0.0.1:8082/index.php?action=oauth_callback&provider=google
-http://127.0.0.1:8082/index.php?action=oauth_callback&provider=github
-```
-
-For the public deployment:
-
-```text
-https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=google
-https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=github
-```
-
-Set these environment variables before starting PHP:
-
-```bash
-export SYNTREE_BASE_URL="https://ailinguistics.cloud/mss"
-export SYNTREE_GOOGLE_CLIENT_ID="..."
-export SYNTREE_GOOGLE_CLIENT_SECRET="..."
-export SYNTREE_GITHUB_CLIENT_ID="..."
-export SYNTREE_GITHUB_CLIENT_SECRET="..."
-```
-
-When a provider is not configured, its login button is disabled.
-
 ## Files
 
 - `index.php`: app router, workspace, auth views, help page, about page, and admin dashboard.

@@ -69,36 +69,6 @@ Password: admin123456
 
 正式部署前请务必修改默认密码。
 
-## OAuth 设置
-
-在 Google Cloud Console 和 GitHub Developer Settings 中创建 OAuth App。
-
-本地开发回调地址：
-
-```text
-http://127.0.0.1:8082/index.php?action=oauth_callback&provider=google
-http://127.0.0.1:8082/index.php?action=oauth_callback&provider=github
-```
-
-线上部署回调地址：
-
-```text
-https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=google
-https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=github
-```
-
-启动 PHP 前设置环境变量：
-
-```bash
-export SYNTREE_BASE_URL="https://ailinguistics.cloud/mss"
-export SYNTREE_GOOGLE_CLIENT_ID="..."
-export SYNTREE_GOOGLE_CLIENT_SECRET="..."
-export SYNTREE_GITHUB_CLIENT_ID="..."
-export SYNTREE_GITHUB_CLIENT_SECRET="..."
-```
-
-如果没有配置某个 OAuth 服务商，对应登录按钮会自动禁用。
-
 ## 文件结构
 
 - `index.php`：应用路由、工作区、登录注册页面、使用说明、关于页面和管理员后台。
