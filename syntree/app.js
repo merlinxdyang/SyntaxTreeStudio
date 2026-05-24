@@ -5,6 +5,9 @@ const NODE_LABEL_X_OFFSET = -22;
 const RIGHT_SUBTREE_LABEL_X_CORRECTION = 22;
 const BRANCH_LABEL_GAP = 8;
 const TRIANGLE_ROOF_X_OFFSET = 12;
+const MOVEMENT_COLOR_STORAGE_KEY = "syntree-movement-custom-colors";
+const DEFAULT_MOVEMENT_COLOR = "#0f172a";
+const DEFAULT_MOVEMENT_COLORS = [DEFAULT_MOVEMENT_COLOR, "#1d4ed8", "#dc2626"];
 const GREEK_LETTERS = {
   alpha: { text: "α", latex: "\\alpha" },
   beta: { text: "β", latex: "\\beta" },
@@ -63,6 +66,8 @@ let previewZoom = 1;
 let current = { tree: null, layout: null, links: [], latex: "" };
 let movementPoints = {};
 let movementVisibility = {};
+let movementColors = {};
+let customMovementColors = loadCustomMovementColors();
 let branchPoints = {};
 let selectedMovementId = null;
 let selectedBranchId = null;
@@ -110,11 +115,13 @@ buttons.latex.addEventListener("click", () => downloadText("syntax-tree-forest.t
 buttons.zoomIn.addEventListener("click", () => setPreviewZoom(previewZoom + 0.1));
 buttons.zoomOut.addEventListener("click", () => setPreviewZoom(previewZoom - 0.1));
 buttons.zoomReset.addEventListener("click", () => setPreviewZoom(1));
-buttons.copy.addEventListener("click", async () => {
-  await navigator.clipboard.writeText(current.latex);
-  buttons.copy.textContent = L.copied || "Copied";
-  window.setTimeout(() => { buttons.copy.textContent = L.copy || "Copy"; }, 1200);
-});
+if (buttons.copy) {
+  buttons.copy.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(current.latex);
+    buttons.copy.textContent = L.copied || "Copied";
+    window.setTimeout(() => { buttons.copy.textContent = L.copy || "Copy"; }, 1200);
+  });
+}
 
 if (saveHistory) {
   saveHistory.addEventListener("click", saveCurrentHistory);
@@ -169,7 +176,7 @@ function render() {
     current = { tree: null, layout: null, links: [], latex: "" };
     parseNotice.className = "notice error";
     parseNotice.textContent = parsed.error;
-    latexOutput.textContent = L.typesettingPlaceholder || "Typesetting code appears after a valid parse.";
+    if (latexOutput) latexOutput.textContent = L.typesettingPlaceholder || "Typesetting code appears after a valid parse.";
     canvasWrap.innerHTML = `<div class="empty-state">${escapeHtml(L.enterExpression || "Enter a valid tree expression to show the preview.")}</div>`;
     setExportEnabled(false);
     setZoomEnabled(false);
@@ -179,6 +186,7 @@ function render() {
   const detectedLinks = detectMovementLinks(parsed.tree);
   const treeNodes = flattenTree(parsed.tree);
   pruneMovementVisibility(detectedLinks);
+  pruneMovementColors(detectedLinks);
   renderMovementToggles(detectedLinks, treeNodes);
   const links = showMovement.checked ? detectedLinks.filter((link) => movementVisibility[link.id] !== false) : [];
   const layout = layoutTree(parsed.tree);
@@ -191,7 +199,7 @@ function render() {
   parseNotice.textContent = L.foundStats
     ? L.foundStats.replace("{nodes}", String(layout.nodes.length)).replace("{links}", String(links.length))
     : `Found ${layout.nodes.length} nodes and ${links.length} movement links.`;
-  latexOutput.textContent = latex;
+  if (latexOutput) latexOutput.textContent = latex;
   measuredLabelAnchors = {};
   measuredStrikeLines = {};
   const measurementSvg = renderSvg(layout, links);
@@ -208,7 +216,7 @@ function setExportEnabled(enabled) {
   buttons.whitePng.disabled = !enabled;
   buttons.png.disabled = !enabled;
   buttons.latex.disabled = !enabled;
-  buttons.copy.disabled = !enabled;
+  if (buttons.copy) buttons.copy.disabled = !enabled;
   if (saveHistory) saveHistory.disabled = !enabled;
 }
 
@@ -266,7 +274,11 @@ function renderMovementToggles(links, nodes) {
   movementToggles.replaceChildren();
   links.forEach((link) => {
     if (movementVisibility[link.id] === undefined) movementVisibility[link.id] = true;
+    if (!movementColors[link.id]) movementColors[link.id] = DEFAULT_MOVEMENT_COLOR;
+    const item = document.createElement("div");
+    item.className = "movement-toggle-item";
     const label = document.createElement("label");
+    label.className = "movement-toggle-row";
     const text = document.createElement("span");
     text.textContent = movementToggleText(link, byId);
     const input = document.createElement("input");
@@ -278,8 +290,76 @@ function renderMovementToggles(links, nodes) {
       render();
     });
     label.append(text, input);
-    movementToggles.appendChild(label);
+    item.append(label, renderMovementColorPalette(link));
+    movementToggles.appendChild(item);
   });
+}
+
+function renderMovementColorPalette(link) {
+  const palette = document.createElement("div");
+  palette.className = "movement-color-palette";
+  const colors = [...DEFAULT_MOVEMENT_COLORS, ...customMovementColors];
+  colors.forEach((color, index) => {
+    const isCustomSlot = index >= DEFAULT_MOVEMENT_COLORS.length;
+    const slotIndex = index - DEFAULT_MOVEMENT_COLORS.length;
+    const swatch = document.createElement("button");
+    swatch.type = "button";
+    swatch.className = "movement-color-swatch";
+    swatch.disabled = !showMovement.checked;
+    swatch.setAttribute("aria-label", "Set movement link color");
+    if (color) {
+      swatch.style.backgroundColor = color;
+      if (movementColor(link.id) === color) swatch.classList.add("active");
+    } else {
+      swatch.classList.add("empty");
+      swatch.setAttribute("aria-label", "Choose a reusable movement link color");
+    }
+    swatch.addEventListener("click", () => {
+      if (color) {
+        movementColors[link.id] = color;
+        render();
+        return;
+      }
+      const picker = document.createElement("input");
+      picker.type = "color";
+      picker.value = DEFAULT_MOVEMENT_COLOR;
+      picker.className = "visually-hidden-color-input";
+      picker.addEventListener("change", () => {
+        if (!isHexColor(picker.value)) return;
+        customMovementColors[slotIndex] = picker.value;
+        saveCustomMovementColors();
+        movementColors[link.id] = picker.value;
+        picker.remove();
+        render();
+      }, { once: true });
+      document.body.appendChild(picker);
+      picker.click();
+    });
+    palette.appendChild(swatch);
+  });
+  return palette;
+}
+
+function movementColor(linkId) {
+  return isHexColor(movementColors[linkId]) ? movementColors[linkId] : DEFAULT_MOVEMENT_COLOR;
+}
+
+function loadCustomMovementColors() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(MOVEMENT_COLOR_STORAGE_KEY) || "[]");
+    if (!Array.isArray(parsed)) return [null, null];
+    return [parsed[0], parsed[1]].map((color) => isHexColor(color) ? color : null);
+  } catch {
+    return [null, null];
+  }
+}
+
+function saveCustomMovementColors() {
+  localStorage.setItem(MOVEMENT_COLOR_STORAGE_KEY, JSON.stringify(customMovementColors));
+}
+
+function isHexColor(value) {
+  return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
 }
 
 function movementToggleText(link, byId) {
@@ -529,6 +609,7 @@ function renderSvg(layout, links) {
 
   const defs = el("defs");
   links.forEach((link) => {
+    const color = movementColor(link.id);
     const marker = el("marker", {
       id: `arrow-${safeSvgId(link.id)}`,
       markerWidth: 11,
@@ -537,7 +618,7 @@ function renderSvg(layout, links) {
       refY: 5.5,
       orient: "auto-start-reverse",
     });
-    marker.appendChild(el("path", { d: "M 0 0 L 11 5.5 L 0 11 z", fill: "#0f172a" }));
+    marker.appendChild(el("path", { d: "M 0 0 L 11 5.5 L 0 11 z", fill: color }));
     defs.appendChild(marker);
   });
   svg.appendChild(defs);
@@ -592,9 +673,11 @@ function renderSvg(layout, links) {
     const points = movementCurvePoints(link, rank, from, to);
     const d = movementPathD(points);
     const arrowOnStart = points.start.x <= points.end.x;
+    const color = movementColor(link.id);
     const path = el("path", {
       d,
       class: `movement ${movementStyle.value} ${selectedMovementId === link.id ? "selected" : ""}`,
+      style: `stroke: ${color};`,
       "marker-start": arrowOnStart ? `url(#arrow-${safeSvgId(link.id)})` : "",
       "marker-end": arrowOnStart ? "" : `url(#arrow-${safeSvgId(link.id)})`,
     });
@@ -1245,6 +1328,11 @@ function pruneMovementPoints(links) {
 function pruneMovementVisibility(links) {
   const valid = new Set(links.map((link) => link.id));
   movementVisibility = Object.fromEntries(Object.entries(movementVisibility).filter(([id]) => valid.has(id)));
+}
+
+function pruneMovementColors(links) {
+  const valid = new Set(links.map((link) => link.id));
+  movementColors = Object.fromEntries(Object.entries(movementColors).filter(([id]) => valid.has(id)));
 }
 
 function pruneBranchPoints(nodes) {

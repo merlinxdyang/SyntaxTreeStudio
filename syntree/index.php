@@ -4,6 +4,7 @@ declare(strict_types=1);
 require __DIR__ . '/src/bootstrap.php';
 
 const SYNTREE_VERSION = '0.2.0';
+const APP_BRAND = 'MerlinSyntaxStudio';
 
 $action = active_action();
 $user = current_user();
@@ -48,6 +49,11 @@ if ($action === 'workspace') {
 
 if ($action === 'about') {
     render_about();
+    exit;
+}
+
+if ($action === 'help') {
+    render_help_page();
     exit;
 }
 
@@ -156,13 +162,13 @@ function t(string $key): string
 {
     $dict = [
         'en' => [
-            'syntax_tree_generator' => 'Syntax Tree Generator',
+            'syntax_tree_generator' => "Merlin's Syntax Studio",
             'nav_how' => 'How It Works',
             'nav_about' => 'About',
             'start_creating' => 'Start Creating',
             'continue_guest' => 'Use without account',
-            'hero_eyebrow' => 'Linguistic tree workspace',
-            'hero_title' => 'Turn bracket notation into clean syntax trees.',
+            'hero_eyebrow' => APP_BRAND,
+            'hero_title' => 'Turn bracket notation into clean syntax trees',
             'hero_copy' => 'Create phrase-structure trees, movement links, transparent PNGs, SVGs, and Forest LaTeX in one quiet workspace.',
             'hero_note_1' => 'Free to start',
             'hero_note_2' => 'No account required',
@@ -178,10 +184,10 @@ function t(string $key): string
             'oauth_hint' => 'Google and GitHub login are enabled after OAuth environment variables are configured.',
             'workspace' => 'Workspace',
             'about' => 'About',
-            'about_title' => 'About Syntree',
+            'about_title' => 'About ' . APP_BRAND,
             'about_maker' => 'Creator',
             'about_version' => 'Version',
-            'about_intro' => 'Syntree is a lightweight syntax tree generator for linguistics teaching, analysis, and quick publication drafting.',
+            'about_intro' => APP_BRAND . ' is a lightweight syntax tree generator for linguistics teaching, analysis, and quick publication drafting.',
             'about_feature_title' => 'What it does',
             'about_feature_1' => 'Turns bracket expressions into readable phrase-structure trees in real time.',
             'about_feature_2' => 'Supports movement links, traces, triangle roofs, strikethrough, italics, outline text, subscripts, superscripts, and Greek letters.',
@@ -208,11 +214,14 @@ function t(string $key): string
             'latex' => 'LaTeX',
             'save_account' => 'Save to account',
             'typesetting_code' => 'LaTeX Code',
+            'syntax_reference_title' => 'Syntax Reference',
+            'syntax_example_col' => 'Syntax example',
+            'syntax_effect_col' => 'Display effect',
             'copy' => 'Copy',
             'preview' => 'Preview',
             'preview_hint' => 'Use _i for visible indices, _z for hidden movement indices, =word= for strikethrough, *word* for italics, @word@ for outline text, and alpha/beta/gamma/phi for Greek letters.',
             'help' => 'Guide',
-            'help_title' => 'Syntree guide',
+            'help_title' => 'Guide',
             'help_close' => 'Close',
             'help_syntax' => 'Syntax reference',
             'help_examples' => 'Examples',
@@ -225,13 +234,13 @@ function t(string $key): string
             'language' => 'English',
         ],
         'zh' => [
-            'syntax_tree_generator' => '树形图生成器',
+            'syntax_tree_generator' => 'Merlin的句法树形图生成器',
             'nav_how' => '使用方式',
             'nav_about' => '关于',
             'start_creating' => '开始生成',
             'continue_guest' => '不注册直接使用',
-            'hero_eyebrow' => '语言学树图工作台',
-            'hero_title' => '把括号表达式转换成清晰的树形图。',
+            'hero_eyebrow' => APP_BRAND,
+            'hero_title' => '把括号表达式转换成清晰的树形图',
             'hero_copy' => '在一个简洁页面中生成短语结构树形图、移位线、透明 PNG、SVG 和 Forest LaTeX。',
             'hero_note_1' => '免费开始',
             'hero_note_2' => '无需账户',
@@ -247,10 +256,10 @@ function t(string $key): string
             'oauth_hint' => '配置 OAuth 环境变量后，可启用 Google 和 GitHub 登录。',
             'workspace' => '工作台',
             'about' => '关于',
-            'about_title' => '关于 Syntree',
+            'about_title' => '关于 ' . APP_BRAND,
             'about_maker' => '制作人',
             'about_version' => '版本号',
-            'about_intro' => 'Syntree 是一个轻量级句法树/树形图生成工具，面向语言学教学、句法分析、课堂展示和论文写作草稿。',
+            'about_intro' => APP_BRAND . ' 是一个轻量级句法树/树形图生成工具，面向语言学教学、句法分析、课堂展示和论文写作草稿。',
             'about_feature_title' => '主要功能',
             'about_feature_1' => '把括号表达式实时转换为可读的短语结构树形图。',
             'about_feature_2' => '支持移位线、trace、三角形 roof、删除线、斜体、空心字、下标、上标和希腊字母。',
@@ -277,6 +286,9 @@ function t(string $key): string
             'latex' => 'LaTeX',
             'save_account' => '保存到账户',
             'typesetting_code' => 'LaTeX 代码',
+            'syntax_reference_title' => '常见语法表',
+            'syntax_example_col' => '语法示例',
+            'syntax_effect_col' => '实际显示效果',
             'copy' => '复制',
             'preview' => '预览',
             'preview_hint' => '使用 _i 显示下标，_z 隐藏下标但保留移位匹配，=word= 标记删除线，*word* 标记斜体，@word@ 标记空心字，alpha/beta/gamma/phi 显示希腊字母。',
@@ -294,13 +306,13 @@ function t(string $key): string
             'language' => '中文',
         ],
         'ja' => [
-            'syntax_tree_generator' => '統語樹ジェネレーター',
+            'syntax_tree_generator' => 'Merlinの統語樹ジェネレーター',
             'nav_how' => '使い方',
             'nav_about' => '概要',
             'start_creating' => '作成を開始',
             'continue_guest' => '登録せずに使う',
-            'hero_eyebrow' => '言語学ツリーワークスペース',
-            'hero_title' => '括弧表記を見やすい統語樹に変換。',
+            'hero_eyebrow' => APP_BRAND,
+            'hero_title' => '括弧表記を見やすい統語樹に変換',
             'hero_copy' => '句構造木、移動リンク、透過 PNG、SVG、Forest LaTeX を一つの画面で作成できます。',
             'hero_note_1' => '無料で開始',
             'hero_note_2' => 'アカウント不要',
@@ -316,10 +328,10 @@ function t(string $key): string
             'oauth_hint' => 'OAuth 環境変数を設定すると Google/GitHub ログインが使えます。',
             'workspace' => 'ワークスペース',
             'about' => '概要',
-            'about_title' => 'Syntree について',
+            'about_title' => APP_BRAND . ' について',
             'about_maker' => '制作者',
             'about_version' => 'バージョン',
-            'about_intro' => 'Syntree は、言語学の教育、分析、発表資料、論文草稿向けの軽量な統語樹生成ツールです。',
+            'about_intro' => APP_BRAND . ' は、言語学の教育、分析、発表資料、論文草稿向けの軽量な統語樹生成ツールです。',
             'about_feature_title' => '主な機能',
             'about_feature_1' => '括弧表現をリアルタイムで読みやすい句構造木に変換します。',
             'about_feature_2' => '移動線、trace、三角形 roof、取り消し線、斜体、袋文字、下付き、上付き、ギリシャ文字に対応します。',
@@ -346,6 +358,9 @@ function t(string $key): string
             'latex' => 'LaTeX',
             'save_account' => 'アカウントに保存',
             'typesetting_code' => 'LaTeX コード',
+            'syntax_reference_title' => 'よく使う構文',
+            'syntax_example_col' => '構文例',
+            'syntax_effect_col' => '表示結果',
             'copy' => 'コピー',
             'preview' => 'プレビュー',
             'preview_hint' => '_i は表示下付き、_z は非表示の移動用下付き、=word= は取り消し線、*word* は斜体、@word@ は袋文字、alpha/beta/gamma/phi はギリシャ文字です。',
@@ -363,13 +378,13 @@ function t(string $key): string
             'language' => '日本語',
         ],
         'ko' => [
-            'syntax_tree_generator' => '수형도 생성기',
+            'syntax_tree_generator' => 'Merlin의 수형도 생성기',
             'nav_how' => '사용 방법',
             'nav_about' => '소개',
             'start_creating' => '시작하기',
             'continue_guest' => '가입 없이 사용',
-            'hero_eyebrow' => '언어학 트리 작업공간',
-            'hero_title' => '괄호 표기를 깔끔한 수형도로 변환합니다.',
+            'hero_eyebrow' => APP_BRAND,
+            'hero_title' => '괄호 표기를 깔끔한 수형도로 변환합니다',
             'hero_copy' => '구 구조 수형도, 이동 링크, 투명 PNG, SVG, Forest LaTeX를 한 화면에서 만들 수 있습니다.',
             'hero_note_1' => '무료 시작',
             'hero_note_2' => '계정 불필요',
@@ -385,10 +400,10 @@ function t(string $key): string
             'oauth_hint' => 'OAuth 환경 변수를 설정하면 Google/GitHub 로그인을 사용할 수 있습니다.',
             'workspace' => '작업공간',
             'about' => '소개',
-            'about_title' => 'Syntree 소개',
+            'about_title' => APP_BRAND . ' 소개',
             'about_maker' => '제작자',
             'about_version' => '버전',
-            'about_intro' => 'Syntree는 언어학 교육, 분석, 발표 자료, 논문 초안을 위한 가벼운 수형도 생성 도구입니다.',
+            'about_intro' => APP_BRAND . '는 언어학 교육, 분석, 발표 자료, 논문 초안을 위한 가벼운 수형도 생성 도구입니다.',
             'about_feature_title' => '주요 기능',
             'about_feature_1' => '괄호 표현식을 읽기 쉬운 구 구조 수형도로 실시간 변환합니다.',
             'about_feature_2' => '이동 링크, trace, 삼각형 roof, 취소선, 이탤릭체, 윤곽 글자, 아래첨자, 위첨자, 그리스 문자를 지원합니다.',
@@ -415,6 +430,9 @@ function t(string $key): string
             'latex' => 'LaTeX',
             'save_account' => '계정에 저장',
             'typesetting_code' => 'LaTeX 코드',
+            'syntax_reference_title' => '자주 쓰는 구문',
+            'syntax_example_col' => '구문 예시',
+            'syntax_effect_col' => '표시 결과',
             'copy' => '복사',
             'preview' => '미리보기',
             'preview_hint' => '_i 는 보이는 아래첨자, _z 는 숨김 이동 아래첨자, =word= 는 취소선, *word* 는 이탤릭체, @word@ 는 윤곽 글자, alpha/beta/gamma/phi 는 그리스 문자입니다.',
@@ -464,25 +482,83 @@ function render_language_picker(string $action): void
     <?php
 }
 
-function render_help_dialog(): void
+function help_content_data(): array
 {
-    $isZh = current_lang() === 'zh';
-    $rows = $isZh ? [
-        ['[XP child child]', '[TP John [T\' T VP]]', '基本括号节点。第一个项目是节点标签，后面的项目是子节点。'],
-        ['A|B|C', 'T0|[+PST]|[+3SG]', '同一个节点内换行显示。'],
-        ['_i, _j, _k', 'John_i', '显示斜体下标。相同下标会自动生成移位线。'],
-        ['_z', 'John_z ... t_z', '隐藏下标。z 不显示，但仍参与移位线匹配。'],
-        ['t_i / trace_i', 't_i', 'trace 或空位标签，可与上方同标成分连线。'],
-        ['=word=', '=read=_k', '删除线。旧写法 -word- 仍然兼容。'],
-        ['*word*', '*where*_i', '斜体。'],
-        ['=*word*=', '=*read*=_k', '斜体加删除线。'],
-        ['@word@', '@he will go *where*@_i', '空心字。内部也可以继续使用斜体。'],
-        ['v0 / X0', 'v0|read_k, C0', '0 显示为上标。v0 会显示为斜体 v 加上标 0。'],
-        ['X1, X2', 'DP1', '末尾非零数字显示为下标。'],
-        ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', '希腊字母。也支持 theta、lambda、omega 等。'],
-        ['[^TP words]', '[^TP @he will go *where*@_i]', '三角形/roof 节点。下方文字从三角形左端开始对齐。'],
-        ['点击树枝或移位线', '-', '显示可拖动端点。移位线有起点、终点和中间控制点。'],
-    ] : [
+    $lang = current_lang();
+
+    if ($lang === 'zh') {
+        return [[
+            ['[XP child child]', '[TP John [T\' T VP]]', '基本括号节点。第一个项目是节点标签，后面的项目是子节点。'],
+            ['A|B|C', 'T0|[+PST]|[+3SG]', '同一个节点内换行显示。'],
+            ['_i, _j, _k', 'John_i', '显示斜体下标。相同下标会自动生成移位线。'],
+            ['_z', 'John_z ... t_z', '隐藏下标。z 不显示，但仍参与移位线匹配。'],
+            ['t_i / trace_i', 't_i', 'trace 或空位标签，可与上方同标成分连线。'],
+            ['=word=', '=read=_k', '删除线。旧写法 -word- 仍然兼容。'],
+            ['*word*', '*where*_i', '斜体。'],
+            ['=*word*=', '=*read*=_k', '斜体加删除线。'],
+            ['@word@', '@he will go *where*@_i', '空心字。内部也可以继续使用斜体。'],
+            ['v0 / X0', 'v0|read_k, C0', '0 显示为上标。v0 会显示为斜体 v 加上标 0。'],
+            ['X1, X2', 'DP1', '末尾非零数字显示为下标。'],
+            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', '希腊字母。也支持 theta、lambda、omega 等。'],
+            ['[^TP words]', '[^TP @he will go *where*@_i]', '三角形/roof 节点。下方文字从三角形左端开始对齐。'],
+            ['点击树枝或移位线', '-', '显示可拖动端点。移位线有起点、终点和中间控制点。'],
+        ], ['语法', '示例', '效果'], [
+            '右侧控制栏会按移位线数量生成复选框，可以单独显示或隐藏某一条移位线。',
+            '预览区可以缩放 50% 到 250%；树图超出视口时会出现上下和左右滚动条。',
+            '可以导出 SVG、白底 PNG、透明 PNG 和可在 Overleaf 编译的完整 Forest LaTeX。',
+            '游客可以生成和导出树图；登录用户会保存最近 20 条生成记录。',
+        ]];
+    }
+
+    if ($lang === 'ja') {
+        return [[
+            ['[XP child child]', '[TP John [T\' T VP]]', '基本的な括弧ノードです。最初の項目がノードラベルで、後続の項目が子ノードです。'],
+            ['A|B|C', 'T0|[+PST]|[+3SG]', '同じノード内で複数行に分けて表示します。'],
+            ['_i, _j, _k', 'John_i', '斜体の下付き文字を表示します。同じ下付き文字は移動線を自動生成します。'],
+            ['_z', 'John_z ... t_z', '非表示の移動インデックスです。z は表示されませんが、移動線の照合には使われます。'],
+            ['t_i / trace_i', 't_i', '移動に対応する trace または空所ラベルです。'],
+            ['=word=', '=read=_k', '取り消し線です。旧形式 -word- も引き続き使えます。'],
+            ['*word*', '*where*_i', '斜体です。'],
+            ['=*word*=', '=*read*=_k', '斜体に取り消し線を重ねます。'],
+            ['@word@', '@he will go *where*@_i', '袋文字です。内部で斜体も併用できます。'],
+            ['v0 / X0', 'v0|read_k, C0', '0 を上付きで表示します。v0 は斜体 v と上付き 0 で表示されます。'],
+            ['X1, X2', 'DP1', '末尾の 0 以外の数字を下付きで表示します。'],
+            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', 'ギリシャ文字を表示します。theta、lambda、omega などにも対応します。'],
+            ['[^TP words]', '[^TP @he will go *where*@_i]', '三角形 / roof ノードです。下の文字は三角形の左端から揃えて表示されます。'],
+            ['枝または移動線をクリック', '-', 'ドラッグ可能な制御点を表示します。移動線には始点、終点、中間制御点があります。'],
+        ], ['構文', '例', '効果'], [
+            '右側のコントロール欄では、生成された移動線ごとにチェックボックスで表示・非表示を切り替えられます。',
+            'プレビューは 50% から 250% まで拡大縮小できます。ツリーが表示領域を超えると、縦横のスクロールバーが表示されます。',
+            'SVG、白背景 PNG、透過 PNG、Overleaf でコンパイル可能な完全な Forest LaTeX を書き出せます。',
+            'ゲストでもツリーの生成と書き出しができます。ログインしたユーザーは最近 20 件の生成履歴を保存できます。',
+        ]];
+    }
+
+    if ($lang === 'ko') {
+        return [[
+            ['[XP child child]', '[TP John [T\' T VP]]', '기본 괄호 노드입니다. 첫 항목은 노드 라벨이고, 뒤의 항목들은 자식 노드입니다.'],
+            ['A|B|C', 'T0|[+PST]|[+3SG]', '한 노드 안에서 여러 줄로 표시합니다.'],
+            ['_i, _j, _k', 'John_i', '보이는 이탤릭 아래첨자를 표시합니다. 같은 아래첨자는 이동선을 자동 생성합니다.'],
+            ['_z', 'John_z ... t_z', '숨김 이동 인덱스입니다. z는 표시되지 않지만 이동선 매칭에는 사용됩니다.'],
+            ['t_i / trace_i', 't_i', '이동에 대응하는 trace 또는 빈자리 라벨입니다.'],
+            ['=word=', '=read=_k', '취소선입니다. 기존 -word- 형식도 계속 사용할 수 있습니다.'],
+            ['*word*', '*where*_i', '이탤릭체입니다.'],
+            ['=*word*=', '=*read*=_k', '이탤릭체에 취소선을 적용합니다.'],
+            ['@word@', '@he will go *where*@_i', '윤곽 글자입니다. 내부에서 이탤릭체도 함께 사용할 수 있습니다.'],
+            ['v0 / X0', 'v0|read_k, C0', '0을 위첨자로 표시합니다. v0는 이탤릭 v와 위첨자 0으로 표시됩니다.'],
+            ['X1, X2', 'DP1', '끝의 0이 아닌 숫자는 아래첨자로 표시합니다.'],
+            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', '그리스 문자를 표시합니다. theta, lambda, omega 등도 지원합니다.'],
+            ['[^TP words]', '[^TP @he will go *where*@_i]', '삼각형 / roof 노드입니다. 아래 텍스트는 삼각형 왼쪽 끝에 맞춰 표시됩니다.'],
+            ['가지 또는 이동선 클릭', '-', '드래그 가능한 조절점을 표시합니다. 이동선에는 시작점, 끝점, 중간 조절점이 있습니다.'],
+        ], ['구문', '예시', '효과'], [
+            '오른쪽 제어 영역에서 생성된 각 이동선을 체크박스로 표시하거나 숨길 수 있습니다.',
+            '미리보기는 50%부터 250%까지 확대/축소할 수 있습니다. 트리가 표시 영역을 넘으면 가로와 세로 스크롤바가 나타납니다.',
+            'SVG, 흰 배경 PNG, 투명 PNG, Overleaf에서 컴파일 가능한 완전한 Forest LaTeX를 내보낼 수 있습니다.',
+            '게스트도 트리를 생성하고 내보낼 수 있습니다. 로그인한 사용자는 최근 20개의 생성 기록을 저장할 수 있습니다.',
+        ]];
+    }
+
+    return [[
         ['[XP child child]', '[TP John [T\' T VP]]', 'Basic bracketed node. The first item is the node label; following items are children.'],
         ['A|B|C', 'T0|[+PST]|[+3SG]', 'Multi-line node label.'],
         ['_i, _j, _k', 'John_i', 'Visible italic subscript. Matching indices create movement links.'],
@@ -497,68 +573,150 @@ function render_help_dialog(): void
         ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', 'Greek letters. Also supports theta, lambda, omega, etc.'],
         ['[^TP words]', '[^TP @he will go *where*@_i]', 'Triangle / roof node. Text starts at the left base of the triangle.'],
         ['Click branch / movement line', '-', 'Shows draggable handles for manual adjustment. Movement lines have start, end, and control handles.'],
-    ];
-    $heads = $isZh ? ['语法', '示例', '效果'] : ['Syntax', 'Example', 'Effect'];
-    $notes = $isZh ? [
-        '右侧控制栏会按移位线数量生成复选框，可以单独显示或隐藏某一条移位线。',
-        '预览区可以缩放 50% 到 250%；树图超出视口时会出现上下和左右滚动条。',
-        '可以导出 SVG、白底 PNG、透明 PNG 和可在 Overleaf 编译的完整 Forest LaTeX。',
-        '游客可以生成和导出树图；登录用户会保存最近 20 条生成记录。',
-    ] : [
+    ], ['Syntax', 'Example', 'Effect'], [
         'Use the movement checkboxes to show or hide each generated movement link.',
         'Use the preview zoom controls to zoom from 50% to 250%; scrollbars appear when the tree exceeds the viewport.',
         'SVG, white PNG, transparent PNG, and complete Forest LaTeX export are available from the control panel.',
         'Guests can generate and export trees. Signed-in users can save the latest 20 generated records.',
-    ];
+    ]];
+}
+
+function render_help_sections(array $rows, array $heads, array $notes): void
+{
+    ?>
+    <section class="help-section">
+        <h3><?= e(t('help_syntax')) ?></h3>
+        <div class="help-table-wrap">
+            <table class="help-table">
+                <thead>
+                    <tr>
+                        <?php foreach ($heads as $head): ?>
+                            <th><?= e($head) ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($rows as [$syntax, $example, $effect]): ?>
+                        <tr>
+                            <td><code><?= e($syntax) ?></code></td>
+                            <td><code><?= e($example) ?></code></td>
+                            <td><?= e($effect) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="help-section">
+        <h3><?= e(t('help_examples')) ?></h3>
+        <pre class="help-code">[CP Which-book_i [C' C0|did [TP John_j [T' T0|[+PST] [vP =John=_j [v' v0|read_k [VP =read=_k t_i]]]]]]]</pre>
+        <pre class="help-code">[CP PRN|Where_i [C' C0|is+phi [TP PRN|it [T' T0|=*is*= [vP v0|phi+thought_z [VP V0|thought_z [CP PRN|*where*_i [C' C0|that [^TP @he will go *where*@_i ]]]]]]]]]</pre>
+    </section>
+    <section class="help-section">
+        <h3><?= e(t('help_notes')) ?></h3>
+        <ul class="help-list">
+            <?php foreach ($notes as $note): ?>
+                <li><?= e($note) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+    <?php
+}
+
+function render_help_dialog(): void
+{
+    [$rows, $heads, $notes] = help_content_data();
     ?>
     <dialog id="helpDialog" class="help-dialog">
         <div class="help-dialog-inner">
             <div class="help-header">
                 <div>
-                    <p class="eyebrow">Syntree</p>
+                    <p class="eyebrow"><?= e(APP_BRAND) ?></p>
                     <h2><?= e(t('help_title')) ?></h2>
                 </div>
                 <button type="button" id="helpClose" class="small-button"><?= e(t('help_close')) ?></button>
             </div>
-            <section class="help-section">
-                <h3><?= e(t('help_syntax')) ?></h3>
-                <div class="help-table-wrap">
-                    <table class="help-table">
-                        <thead>
-                            <tr>
-                                <?php foreach ($heads as $head): ?>
-                                    <th><?= e($head) ?></th>
-                                <?php endforeach; ?>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($rows as [$syntax, $example, $effect]): ?>
-                                <tr>
-                                    <td><code><?= e($syntax) ?></code></td>
-                                    <td><code><?= e($example) ?></code></td>
-                                    <td><?= e($effect) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-            <section class="help-section">
-                <h3><?= e(t('help_examples')) ?></h3>
-                <pre class="help-code">[CP Which-book_i [C' C0|did [TP John_j [T' T0|[+PST] [vP =John=_j [v' v0|read_k [VP =read=_k t_i]]]]]]]</pre>
-                <pre class="help-code">[CP PRN|Where_i [C' C0|is+phi [TP PRN|it [T' T0|=*is*= [vP v0|phi+thought_z [VP V0|thought_z [CP PRN|*where*_i [C' C0|that [^TP @he will go *where*@_i ]]]]]]]]]</pre>
-            </section>
-            <section class="help-section">
-                <h3><?= e(t('help_notes')) ?></h3>
-                <ul class="help-list">
-                    <?php foreach ($notes as $note): ?>
-                        <li><?= e($note) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </section>
+            <?php render_help_sections($rows, $heads, $notes); ?>
         </div>
     </dialog>
     <?php
+}
+
+function render_syntax_reference_panel(): void
+{
+    $rows = [
+        ['John_i', 'John<sub>i</sub>'],
+        ['John_z', 'John'],
+        ['=read=', '<span class="syntax-strike">read</span>'],
+        ['*where*', '<em>where</em>'],
+        ['=*read*=', '<span class="syntax-strike"><em>read</em></span>'],
+        ['@John@', '<span class="syntax-hollow">John</span>'],
+        ['v0', '<em>v</em><sup>0</sup>'],
+        ['C0|did', 'C<sup>0</sup><br>did'],
+        ['alpha, beta, phi', 'α, β, φ'],
+        ['[^TP words]', '<span class="syntax-roof">△TP</span><br>words'],
+    ];
+    ?>
+    <section class="syntax-reference-panel" aria-label="<?= e(t('syntax_reference_title')) ?>">
+        <div class="section-title">
+            <h2><?= e(t('syntax_reference_title')) ?></h2>
+        </div>
+        <div class="syntax-reference-grid" role="table">
+            <div class="syntax-reference-row syntax-reference-head" role="row">
+                <div role="columnheader"><?= e(t('syntax_example_col')) ?></div>
+                <div role="columnheader"><?= e(t('syntax_effect_col')) ?></div>
+            </div>
+            <?php foreach ($rows as [$example, $effect]): ?>
+                <div class="syntax-reference-row" role="row">
+                    <div role="cell"><code><?= e($example) ?></code></div>
+                    <div class="syntax-effect" role="cell"><?= $effect ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php
+}
+
+function render_help_page(): void
+{
+    [$rows, $heads, $notes] = help_content_data();
+    page_header(t('help_title'));
+    ?>
+    <main class="app-shell about-shell">
+        <section class="topbar">
+            <div>
+                <p class="eyebrow"><?= e(APP_BRAND) ?></p>
+                <h1><?= e(t('help_title')) ?></h1>
+            </div>
+            <nav class="topnav" aria-label="Help navigation">
+                <?php render_language_picker('help'); ?>
+                <a href="<?= e(page_url('workspace')) ?>"><?= e(t('workspace')) ?></a>
+                <a href="<?= e(page_url('about')) ?>"><?= e(t('about')) ?></a>
+                <?php if (current_user()): ?>
+                    <form method="post" action="index.php?action=logout">
+                        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                        <button type="submit" class="button ghost"><?= e(t('sign_out')) ?></button>
+                    </form>
+                <?php else: ?>
+                    <a href="<?= e(page_url('login')) ?>"><?= e(t('login')) ?></a>
+                <?php endif; ?>
+            </nav>
+        </section>
+
+        <section class="about-panel guide-panel">
+            <div class="about-hero-block">
+                <p class="eyebrow"><?= e(t('syntax_tree_generator')) ?></p>
+                <h2><?= e(t('help_title')) ?></h2>
+            </div>
+            <?php render_help_sections($rows, $heads, $notes); ?>
+            <div class="about-actions">
+                <a class="button primary" href="<?= e(page_url('workspace')) ?>"><?= e(t('start_creating')) ?></a>
+                <a class="button ghost" href="<?= e(page_url()) ?>"><?= e(APP_BRAND) ?></a>
+            </div>
+        </section>
+    </main>
+    <?php
+    page_footer();
 }
 
 function render_landing(string $action): void
@@ -568,12 +726,11 @@ function render_landing(string $action): void
     ?>
     <main class="landing-shell">
         <header class="landing-nav">
-            <a class="brand-mark" href="<?= e(page_url()) ?>" aria-label="Syntree">
-                <span class="logo-glyph" aria-hidden="true"></span>
-                <strong>Syntree</strong>
+            <a class="brand-mark" href="<?= e(page_url()) ?>" aria-label="<?= e(APP_BRAND) ?>">
+                <img class="brand-logo-image" src="assets/landing-logo.png" width="520" height="173" alt="<?= e(APP_BRAND) ?>">
             </a>
             <nav class="landing-links" aria-label="Primary navigation">
-                <a href="#how"><?= e(t('nav_how')) ?></a>
+                <a href="<?= e(page_url('help')) ?>"><?= e(t('nav_how')) ?></a>
                 <a href="<?= e(page_url('about')) ?>"><?= e(t('about')) ?></a>
             </nav>
             <div class="landing-actions">
@@ -586,7 +743,7 @@ function render_landing(string $action): void
 
         <section class="landing-hero">
             <div class="hero-copy">
-                <p class="hero-kicker"><span class="logo-glyph small" aria-hidden="true"></span><?= e(t('hero_eyebrow')) ?></p>
+                <p class="hero-kicker"><?= e(t('hero_eyebrow')) ?></p>
                 <h1><?= e(t('hero_title')) ?></h1>
                 <p class="hero-lede"><?= e(t('hero_copy')) ?></p>
                 <div class="hero-buttons">
@@ -602,22 +759,7 @@ function render_landing(string $action): void
 
             <div class="hero-side">
                 <div class="feature-visual" aria-hidden="true">
-                    <svg viewBox="0 0 520 330" role="img">
-                        <path class="orbit one" d="M355 74a84 84 0 1 1-1 0" />
-                        <path class="orbit two" d="M355 38a120 120 0 1 1-1 0" />
-                        <circle class="dot d1" cx="354" cy="157" r="9" />
-                        <circle class="dot d2" cx="292" cy="112" r="5" />
-                        <circle class="dot d3" cx="421" cy="91" r="4" />
-                        <g class="mini-tree">
-                            <text x="80" y="54">CP</text>
-                            <text x="34" y="140">Which-book_i</text>
-                            <text x="185" y="138">TP</text>
-                            <text x="142" y="224">John_j</text>
-                            <text x="248" y="224">t_i</text>
-                            <path d="M90 64 L70 118 M98 64 L184 116 M185 148 L148 202 M190 148 L248 202" />
-                            <path class="movement-demo" d="M248 240 Q142 316 40 164" />
-                        </g>
-                    </svg>
+                    <img src="assets/landing-intro.png" width="900" height="563" alt="">
                 </div>
                 <?php render_auth_panel($authAction, 'landing'); ?>
             </div>
@@ -649,7 +791,7 @@ function render_about(): void
     <main class="app-shell about-shell">
         <section class="topbar">
             <div>
-                <p class="eyebrow">Syntree</p>
+                <p class="eyebrow"><?= e(APP_BRAND) ?></p>
                 <h1><?= e(t('about_title')) ?></h1>
             </div>
             <nav class="topnav" aria-label="About navigation">
@@ -669,7 +811,7 @@ function render_about(): void
         <section class="about-panel">
             <div class="about-hero-block">
                 <p class="eyebrow"><?= e(t('syntax_tree_generator')) ?></p>
-                <h2>Syntree</h2>
+                <h2><?= e(APP_BRAND) ?></h2>
                 <p><?= e(t('about_intro')) ?></p>
             </div>
 
@@ -715,7 +857,7 @@ function render_about(): void
 
             <div class="about-actions">
                 <a class="button primary" href="<?= e(page_url('workspace')) ?>"><?= e(t('start_creating')) ?></a>
-                <a class="button ghost" href="<?= e(page_url()) ?>">Syntree</a>
+                <a class="button ghost" href="<?= e(page_url()) ?>"><?= e(APP_BRAND) ?></a>
             </div>
         </section>
     </main>
@@ -732,7 +874,7 @@ function render_workspace(): void
     <main class="app-shell">
         <section class="topbar">
             <div>
-                <p class="eyebrow">Syntree</p>
+                <p class="eyebrow"><?= e(APP_BRAND) ?></p>
                 <h1><?= e(t('syntax_tree_generator')) ?></h1>
             </div>
             <nav class="topnav" aria-label="Account navigation">
@@ -804,13 +946,7 @@ function render_workspace(): void
                     <?php endif; ?>
                 </div>
 
-                <section class="latex-panel" aria-label="LaTeX output">
-                    <div class="section-title">
-                        <h2><?= e(t('typesetting_code')) ?></h2>
-                        <button type="button" id="copyLatex" class="small-button" disabled><?= e(t('copy')) ?></button>
-                    </div>
-                    <pre id="latexOutput"><?= e(t('typesetting_code')) ?></pre>
-                </section>
+                <?php render_syntax_reference_panel(); ?>
             </aside>
 
             <section class="preview-panel" aria-label="Syntax tree preview">
@@ -954,7 +1090,7 @@ function render_admin(): void
     <main class="app-shell admin-shell">
         <section class="topbar">
             <div>
-                <p class="eyebrow">Syntree Admin</p>
+                <p class="eyebrow"><?= e(APP_BRAND) ?> Admin</p>
                 <h1>Users and Access</h1>
             </div>
             <nav class="topnav" aria-label="Admin navigation">
@@ -1051,7 +1187,7 @@ function page_header(string $title): void
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?= e($title) ?> · Syntree</title>
+        <title><?= e($title) ?> · <?= e(APP_BRAND) ?></title>
         <link rel="stylesheet" href="style.css?v=<?= (int) @filemtime(__DIR__ . '/style.css') ?>">
     </head>
     <body>
