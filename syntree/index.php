@@ -883,6 +883,10 @@ function render_workspace(): void
                 <a href="<?= e(page_url('about')) ?>"><?= e(t('about')) ?></a>
                 <?php if (!$user): ?>
                     <span class="status-pill"><?= e(t('guest_mode')) ?></span>
+                <?php else: ?>
+                    <span class="status-pill signed-user-pill" title="<?= e($user['email']) ?>">
+                        <?= e(t('signed_in')) ?>: <?= e($user['name']) ?>
+                    </span>
                 <?php endif; ?>
                 <a href="<?= e(page_url('workspace')) ?>"><?= e(t('workspace')) ?></a>
                 <?php if ($user && $user['role'] === 'admin'): ?>
@@ -946,6 +950,27 @@ function render_workspace(): void
                     <?php endif; ?>
                 </div>
 
+                <?php if ($user): ?>
+                    <details class="history-card compact-history">
+                        <summary>
+                            <span><?= e(t('recent_records')) ?></span>
+                            <small><?= count($records) ?>/20</small>
+                        </summary>
+                        <?php if (!$records): ?>
+                            <p class="muted"><?= e(t('no_saved')) ?></p>
+                        <?php else: ?>
+                            <div class="history-list">
+                                <?php foreach ($records as $record): ?>
+                                    <button type="button" class="history-item" data-source="<?= e($record['source']) ?>">
+                                        <span><?= e(mb_strimwidth($record['source'], 0, 80, '...')) ?></span>
+                                        <small><?= e($record['created_at']) ?> · <?= (int) $record['node_count'] ?> nodes</small>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </details>
+                <?php endif; ?>
+
                 <?php render_syntax_reference_panel(); ?>
             </aside>
 
@@ -966,32 +991,6 @@ function render_workspace(): void
                 </div>
             </section>
 
-            <?php if ($user): ?>
-                <aside class="account-panel">
-                    <section class="account-card">
-                        <p class="eyebrow"><?= e(t('signed_in')) ?></p>
-                        <h2><?= e($user['name']) ?></h2>
-                        <p><?= e($user['email']) ?></p>
-                    </section>
-                    <section class="history-card">
-                        <div class="section-title">
-                            <h2><?= e(t('recent_records')) ?></h2>
-                        </div>
-                        <?php if (!$records): ?>
-                            <p class="muted"><?= e(t('no_saved')) ?></p>
-                        <?php else: ?>
-                            <div class="history-list">
-                                <?php foreach ($records as $record): ?>
-                                    <button type="button" class="history-item" data-source="<?= e($record['source']) ?>">
-                                        <span><?= e(mb_strimwidth($record['source'], 0, 80, '...')) ?></span>
-                                        <small><?= e($record['created_at']) ?> · <?= (int) $record['node_count'] ?> nodes</small>
-                                    </button>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-                    </section>
-                </aside>
-            <?php endif; ?>
         </section>
     </main>
     <script>

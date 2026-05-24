@@ -1,5 +1,6 @@
-const SAMPLE = "[CP Which-book_i [C' C0|did [TP John_j [T' [T0|\\[+PST\\]] [vP =John=_j [v' read_k [VP =read=_k t_i]]]]]]]";
+const SAMPLE = "[CP PRN|Where_i [C' C0|is_z2+phi|\\[+EPP\\]|\\[+WH\\] [TP PRN|it [T' T0|=*is*=_z2 [vP v0|phi+thought_z1 [VP V0|=thought=_z1 [CP PRN|*where*_i [C' C0|that [^TP @he will go *where*@_i ]]]]]]]]]";
 const LEGACY_SAMPLE = "[CP Which-book_i [C' C0|did [TP John_j [T' [T0|\\[+PST\\]] [vP -John-_j [v' read_k [VP -read-_k t_i]]]]]]]";
+const PREVIOUS_SAMPLE = "[CP Which-book_i [C' C0|did [TP John_j [T' [T0|\\[+PST\\]] [vP =John=_j [v' read_k [VP =read=_k t_i]]]]]]]";
 const SVG_NS = "http://www.w3.org/2000/svg";
 const NODE_LABEL_X_OFFSET = -22;
 const RIGHT_SUBTREE_LABEL_X_CORRECTION = 22;
@@ -77,7 +78,7 @@ let measuredLabelAnchors = {};
 let measuredStrikeLines = {};
 
 const storedSource = localStorage.getItem("syntree-source");
-sourceInput.value = !storedSource || storedSource === LEGACY_SAMPLE ? SAMPLE : storedSource;
+sourceInput.value = !storedSource || storedSource === LEGACY_SAMPLE || storedSource === PREVIOUS_SAMPLE ? SAMPLE : storedSource;
 
 if (helpOpen && helpDialog) {
   helpOpen.addEventListener("click", () => {

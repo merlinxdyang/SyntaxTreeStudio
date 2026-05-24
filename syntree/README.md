@@ -1,6 +1,50 @@
-# Syntree PHP Edition
+# Merlin's Syntax Studio
 
-Plain PHP + SQLite syntax tree generator with email registration, optional Google/GitHub OAuth login, and per-user recent tree history.
+[中文](README.zh-CN.md) | [日本語](README.ja.md) | [한국어](README.ko.md)
+
+Merlin's Syntax Studio is a free, browser-based syntax tree generator for linguists, syntax instructors, and students. It converts bracketed expressions into clean syntactic tree diagrams and supports movement links, traces/copies, multiline labels, Greek letters, triangle/roof notation, and publication-oriented exports.
+
+Use it online:
+
+https://ailinguistics.cloud/mss
+
+## Features
+
+- Interactive bracket-expression editor with immediate tree preview.
+- Visible indices such as `_i`, `_j`, and `_k`.
+- Hidden movement indices such as `_z1` and `_z2`, which generate movement links without displaying subscripts.
+- Strikethrough copies with `=word=`.
+- Italic text with `*word*`.
+- Outline text with `@word@`.
+- Greek-letter shortcuts such as `alpha`, `beta`, `gamma`, and `phi`.
+- Triangle/roof notation with forms such as `[^TP @he will go *where*@_i]`.
+- Adjustable movement links with individual show/hide controls and reusable color choices.
+- Export to SVG, white-background PNG, transparent PNG, and complete Forest LaTeX code.
+- Optional user accounts with email, Google, or GitHub login.
+- Recent 20 saved trees for signed-in users.
+- Guest mode with no registration and no saved history.
+- Interface languages: English, Chinese, Japanese, and Korean.
+
+## Example
+
+```text
+[CP PRN|Where_i [C' C0|is_z2+phi|\[+EPP\]|\[+WH\] [TP PRN|it [T' T0|=*is*=_z2 [vP v0|phi+thought_z1 [VP V0|=thought=_z1 [CP PRN|*where*_i [C' C0|that [^TP @he will go *where*@_i ]]]]]]]]]
+```
+
+## Syntax Reference
+
+| Syntax | Display |
+|---|---|
+| `John_i` | `John` with italic subscript `i` |
+| `John_z1` | `John`, with hidden movement index `z1` |
+| `=read=` | `read` with strikethrough |
+| `*where*` | italic `where` |
+| `=*read*=` | italic `read` with strikethrough |
+| `@John@` | outline text |
+| `v0` | italic `v` with superscript `0` |
+| `C0\|did` | multiline node label |
+| `alpha`, `beta`, `gamma`, `phi` | Greek letters |
+| `[^TP words]` | triangle/roof node |
 
 ## Run Locally
 
@@ -8,46 +52,69 @@ Plain PHP + SQLite syntax tree generator with email registration, optional Googl
 php -S 127.0.0.1:8082 -t syntree
 ```
 
-Open `http://127.0.0.1:8082/index.php`.
+Open:
 
-SQLite is created automatically at `data/syntree.sqlite` on first request. The backend seeds one admin account:
+```text
+http://127.0.0.1:8082/index.php
+```
 
-- Email: `admin@syntree.local`
-- Password: `admin123456`
+SQLite is created automatically at `data/syntree.sqlite` on first request.
 
-Change that password from the admin page before using the app outside local development.
+The backend seeds one local admin account:
+
+```text
+Email: admin@syntree.local
+Password: admin123456
+```
+
+Change that password before using the app outside local development.
 
 ## OAuth Setup
 
-Create OAuth apps in Google Cloud Console and GitHub Developer Settings. Configure callback URLs:
+Create OAuth apps in Google Cloud Console and GitHub Developer Settings.
+
+For local development, use these callback URLs:
 
 ```text
 http://127.0.0.1:8082/index.php?action=oauth_callback&provider=google
 http://127.0.0.1:8082/index.php?action=oauth_callback&provider=github
 ```
 
-For deployment, replace the host with your real domain. If the app cannot infer the public URL correctly, set `SYNTREE_BASE_URL`.
+For the public deployment:
+
+```text
+https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=google
+https://ailinguistics.cloud/mss/index.php?action=oauth_callback&provider=github
+```
 
 Set these environment variables before starting PHP:
 
 ```bash
+export SYNTREE_BASE_URL="https://ailinguistics.cloud/mss"
 export SYNTREE_GOOGLE_CLIENT_ID="..."
 export SYNTREE_GOOGLE_CLIENT_SECRET="..."
 export SYNTREE_GITHUB_CLIENT_ID="..."
 export SYNTREE_GITHUB_CLIENT_SECRET="..."
-export SYNTREE_BASE_URL="https://your-domain.example"
 ```
 
 When a provider is not configured, its login button is disabled.
 
 ## Files
 
-- `index.php`: app router, workspace, auth views, admin dashboard
-- `admin.php`: admin alias
-- `app.js`: browser-side parser, layout, SVG/PNG/LaTeX export, history save
-- `style.css`: responsive UI
-- `src/db.php`: SQLite schema, seed, record retention
-- `src/auth.php`: email registration/login/session handling
-- `src/oauth.php`: Google/GitHub OAuth flow
+- `index.php`: app router, workspace, auth views, help page, about page, and admin dashboard.
+- `admin.php`: admin alias.
+- `app.js`: browser-side parser, layout engine, SVG/PNG/LaTeX export, movement editing, and history save.
+- `style.css`: responsive interface styling.
+- `src/db.php`: SQLite schema, seed account, and record retention.
+- `src/auth.php`: email registration, login, and session handling.
+- `src/oauth.php`: Google/GitHub OAuth flow.
 
-Each user keeps at most 20 saved tree records; older records are deleted after a new save.
+## Buy Me a Coffee
+
+If Merlin's Syntax Studio helps your teaching, research, or writing, you can support the project by buying me a strong Americano:
+
+https://paypal.me/yxd76
+
+## License
+
+MIT License.
