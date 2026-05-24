@@ -49,7 +49,7 @@ https://ailinguistics.cloud/mss
 ## 本地运行
 
 ```bash
-php -S 127.0.0.1:8082 -t syntree
+php -S 127.0.0.1:8082
 ```
 
 打开：

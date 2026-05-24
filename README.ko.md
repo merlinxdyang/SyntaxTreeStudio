@@ -49,7 +49,7 @@ https://ailinguistics.cloud/mss
 ## 로컬 실행
 
 ```bash
-php -S 127.0.0.1:8082 -t syntree
+php -S 127.0.0.1:8082
 ```
 
 열기:
