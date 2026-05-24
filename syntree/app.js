@@ -306,38 +306,58 @@ function renderMovementColorPalette(link) {
     swatch.type = "button";
     swatch.className = "movement-color-swatch";
     swatch.disabled = !showMovement.checked;
-    swatch.setAttribute("aria-label", "Set movement link color");
+    swatch.setAttribute("aria-label", isCustomSlot ? "Use or edit reusable movement link color" : "Set movement link color");
     if (color) {
       swatch.style.backgroundColor = color;
       if (movementColor(link.id) === color) swatch.classList.add("active");
     } else {
       swatch.classList.add("empty");
-      swatch.setAttribute("aria-label", "Choose a reusable movement link color");
     }
-    swatch.addEventListener("click", () => {
-      if (color) {
+    if (isCustomSlot) {
+      let clickTimer = null;
+      swatch.addEventListener("click", () => {
+        if (clickTimer) return;
+        clickTimer = window.setTimeout(() => {
+          clickTimer = null;
+          const storedColor = customMovementColors[slotIndex];
+          if (!storedColor) return;
+          movementColors[link.id] = storedColor;
+          render();
+        }, 190);
+      });
+      swatch.addEventListener("dblclick", () => {
+        if (clickTimer) {
+          window.clearTimeout(clickTimer);
+          clickTimer = null;
+        }
+        openCustomMovementColorPicker(link, slotIndex);
+      });
+    } else {
+      swatch.addEventListener("click", () => {
         movementColors[link.id] = color;
         render();
-        return;
-      }
-      const picker = document.createElement("input");
-      picker.type = "color";
-      picker.value = DEFAULT_MOVEMENT_COLOR;
-      picker.className = "visually-hidden-color-input";
-      picker.addEventListener("change", () => {
-        if (!isHexColor(picker.value)) return;
-        customMovementColors[slotIndex] = picker.value;
-        saveCustomMovementColors();
-        movementColors[link.id] = picker.value;
-        picker.remove();
-        render();
-      }, { once: true });
-      document.body.appendChild(picker);
-      picker.click();
-    });
+      });
+    }
     palette.appendChild(swatch);
   });
   return palette;
+}
+
+function openCustomMovementColorPicker(link, slotIndex) {
+  const picker = document.createElement("input");
+  picker.type = "color";
+  picker.value = customMovementColors[slotIndex] || movementColor(link.id);
+  picker.className = "visually-hidden-color-input";
+  picker.addEventListener("change", () => {
+    if (!isHexColor(picker.value)) return;
+    customMovementColors[slotIndex] = picker.value;
+    saveCustomMovementColors();
+    movementColors[link.id] = picker.value;
+    picker.remove();
+    render();
+  }, { once: true });
+  document.body.appendChild(picker);
+  picker.click();
 }
 
 function movementColor(linkId) {
@@ -371,8 +391,8 @@ function movementToggleText(link, byId) {
 
 function movementLabelName(label) {
   const lines = splitLabelLines(label).map(stripStrikeMarkers);
-  const visible = lines.find((line) => /_[A-Za-z0-9]+$/.test(line)) || lines[0] || stripStrikeMarkers(label);
-  return displayText(visible.replace(/_([A-Za-z0-9]+)$/g, ""));
+  const visible = lines.find((line) => extractMovementIndex(line)) || lines[0] || stripStrikeMarkers(label);
+  return displayText(stripMovementIndexMarker(visible));
 }
 
 function parseBracketTree(input) {
@@ -496,8 +516,7 @@ function flattenTree(tree) {
 }
 
 function getIndex(label) {
-  const match = stripStrikeMarkers(label).match(/_([A-Za-z0-9]+)$/);
-  return match ? match[1] : null;
+  return extractMovementIndex(stripStrikeMarkers(label));
 }
 
 function isTrace(label) {
@@ -727,13 +746,12 @@ function renderLabel(group, label, isLeaf, nodeId = "") {
   const lineGap = isLeaf ? 24 : 30;
   lines.forEach((line, index) => {
     const y = (index - (lines.length - 1) / 2) * lineGap;
-    const x = stackedLabelLineOffset(lines, index, isLeaf);
     const text = el("text", {
       class: `node-label ${isLeaf ? "leaf" : "phrase"}`,
-      x,
+      x: 0,
       y,
-      textAnchor: "middle",
-      dominantBaseline: "middle",
+      "text-anchor": "middle",
+      "dominant-baseline": "middle",
       "data-line-index": index,
     });
     const meta = appendStyledLabel(text, line, isLeaf);
@@ -742,16 +760,6 @@ function renderLabel(group, label, isLeaf, nodeId = "") {
       group.appendChild(renderStrikeLine(meta, y, nodeId, index));
     }
   });
-}
-
-function stackedLabelLineOffset(lines, index, isLeaf) {
-  if (lines.length !== 2 || index !== 0) return 0;
-  const top = parseLabelParts(lines[0]);
-  const bottom = parseLabelParts(lines[1]);
-  const topWidth = estimateStyledTextWidth(top.stem, isLeaf);
-  const bottomWidth = estimateStyledTextWidth(bottom.stem, isLeaf);
-  if (topWidth >= bottomWidth * 0.72) return 0;
-  return Math.min(28, (bottomWidth - topWidth) * 0.32);
 }
 
 function labelX(node) {
@@ -788,8 +796,8 @@ function renderTriangle(group, node) {
     class: "node-label leaf triangle-text",
     x: TRIANGLE_ROOF_X_OFFSET - width / 2,
     y: 94,
-    textAnchor: "start",
-    dominantBaseline: "alphabetic",
+    "text-anchor": "start",
+    "dominant-baseline": "alphabetic",
   });
   appendStyledLabel(text, roofText);
   group.appendChild(text);
@@ -1047,7 +1055,7 @@ function buildLabelParts(rawStem, head, subscript) {
     stem: segmented.text,
     stemSegments: segmented.hasStyle ? segmented.segments : null,
     head,
-    subscript: subscript === "z" ? null : subscript,
+    subscript: isHiddenMovementIndex(subscript) ? null : subscript,
     italicStem: !segmented.hasStyle && isItalicHeadStem(segmented.text, head),
   };
 }
@@ -1059,7 +1067,24 @@ function isItalicHeadStem(stem, hasHead) {
 function splitIndexedLabel(label) {
   const visible = parseStrikeStyle(label).label;
   const match = visible.match(/^(.*)_([A-Za-z0-9]+)$/);
-  return match ? { base: match[1], index: match[2] } : { base: visible, index: null };
+  if (match) return { base: match[1], index: match[2] };
+  const hidden = visible.match(/^(.*)_((?:z|Z)[0-9]+)(.*)$/);
+  return hidden ? { base: `${hidden[1]}${hidden[3]}`, index: hidden[2] } : { base: visible, index: null };
+}
+
+function extractMovementIndex(label) {
+  const suffix = label.match(/_([A-Za-z0-9]+)$/);
+  if (suffix) return suffix[1];
+  const hidden = label.match(/_((?:z|Z)[0-9]+)(?=$|[^A-Za-z0-9])/);
+  return hidden ? hidden[1] : null;
+}
+
+function stripMovementIndexMarker(label) {
+  return label.replace(/_([A-Za-z0-9]+)$/g, "").replace(/_((?:z|Z)[0-9]+)(?=$|[^A-Za-z0-9])/g, "");
+}
+
+function isHiddenMovementIndex(index) {
+  return typeof index === "string" && /^(?:z|Z)(?:[0-9]+)?$/.test(index);
 }
 
 function parseStrikeStyle(label) {
@@ -1165,14 +1190,18 @@ function measureLabelAnchors(svg, nodes) {
   nodes.forEach((node) => {
     const group = svg.querySelector(`[data-node-id="${node.id}"]`);
     if (!group) return;
-    const anchorTarget = isTriangleNode(node) ? group.querySelector("text:not(.triangle-text)") : group;
-    const rect = (anchorTarget || group).getBoundingClientRect();
-    if (!rect.width && !rect.height) return;
-    const topLeft = svgClientPoint(svg, rect.left, rect.top);
-    const bottomRight = svgClientPoint(svg, rect.right, rect.bottom);
+    const blockTarget = isTriangleNode(node) ? group.querySelector("text:not(.triangle-text)") : group;
+    const anchorTarget = group.querySelector('text[data-line-index="0"]') || blockTarget || group;
+    const blockRect = (blockTarget || group).getBoundingClientRect();
+    const anchorRect = anchorTarget.getBoundingClientRect();
+    if (!blockRect.width && !blockRect.height) return;
+    const topLeft = svgClientPoint(svg, blockRect.left, blockRect.top);
+    const bottomRight = svgClientPoint(svg, blockRect.right, blockRect.bottom);
+    const anchorLeft = svgClientPoint(svg, anchorRect.left, anchorRect.top);
+    const anchorRight = svgClientPoint(svg, anchorRect.right, anchorRect.bottom);
     if (!topLeft || !bottomRight) return;
     anchors[node.id] = {
-      centerX: (topLeft.x + bottomRight.x) / 2,
+      centerX: anchorLeft && anchorRight ? (anchorLeft.x + anchorRight.x) / 2 : (topLeft.x + bottomRight.x) / 2,
       topY: topLeft.y,
       bottomY: bottomRight.y,
     };

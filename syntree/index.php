@@ -219,7 +219,7 @@ function t(string $key): string
             'syntax_effect_col' => 'Display effect',
             'copy' => 'Copy',
             'preview' => 'Preview',
-            'preview_hint' => 'Use _i for visible indices, _z for hidden movement indices, =word= for strikethrough, *word* for italics, @word@ for outline text, and alpha/beta/gamma/phi for Greek letters.',
+            'preview_hint' => 'Use _i for visible indices, _z1/_z2 for hidden movement indices, =word= for strikethrough, *word* for italics, @word@ for outline text, and alpha/beta/gamma/phi for Greek letters.',
             'help' => 'Guide',
             'help_title' => 'Guide',
             'help_close' => 'Close',
@@ -291,7 +291,7 @@ function t(string $key): string
             'syntax_effect_col' => '实际显示效果',
             'copy' => '复制',
             'preview' => '预览',
-            'preview_hint' => '使用 _i 显示下标，_z 隐藏下标但保留移位匹配，=word= 标记删除线，*word* 标记斜体，@word@ 标记空心字，alpha/beta/gamma/phi 显示希腊字母。',
+            'preview_hint' => '使用 _i 显示下标，_z1/_z2 隐藏下标但保留不同移位匹配，=word= 标记删除线，*word* 标记斜体，@word@ 标记空心字，alpha/beta/gamma/phi 显示希腊字母。',
             'help' => '使用说明',
             'help_title' => '使用说明',
             'help_close' => '关闭',
@@ -363,7 +363,7 @@ function t(string $key): string
             'syntax_effect_col' => '表示結果',
             'copy' => 'コピー',
             'preview' => 'プレビュー',
-            'preview_hint' => '_i は表示下付き、_z は非表示の移動用下付き、=word= は取り消し線、*word* は斜体、@word@ は袋文字、alpha/beta/gamma/phi はギリシャ文字です。',
+            'preview_hint' => '_i は表示下付き、_z1/_z2 は非表示の移動用インデックス、=word= は取り消し線、*word* は斜体、@word@ は袋文字、alpha/beta/gamma/phi はギリシャ文字です。',
             'help' => '使い方',
             'help_title' => '使い方',
             'help_close' => '閉じる',
@@ -435,7 +435,7 @@ function t(string $key): string
             'syntax_effect_col' => '표시 결과',
             'copy' => '복사',
             'preview' => '미리보기',
-            'preview_hint' => '_i 는 보이는 아래첨자, _z 는 숨김 이동 아래첨자, =word= 는 취소선, *word* 는 이탤릭체, @word@ 는 윤곽 글자, alpha/beta/gamma/phi 는 그리스 문자입니다.',
+            'preview_hint' => '_i 는 보이는 아래첨자, _z1/_z2 는 숨김 이동 인덱스, =word= 는 취소선, *word* 는 이탤릭체, @word@ 는 윤곽 글자, alpha/beta/gamma/phi 는 그리스 문자입니다.',
             'help' => '사용 설명',
             'help_title' => '사용 설명',
             'help_close' => '닫기',
@@ -491,7 +491,7 @@ function help_content_data(): array
             ['[XP child child]', '[TP John [T\' T VP]]', '基本括号节点。第一个项目是节点标签，后面的项目是子节点。'],
             ['A|B|C', 'T0|[+PST]|[+3SG]', '同一个节点内换行显示。'],
             ['_i, _j, _k', 'John_i', '显示斜体下标。相同下标会自动生成移位线。'],
-            ['_z', 'John_z ... t_z', '隐藏下标。z 不显示，但仍参与移位线匹配。'],
+            ['_z1, _z2', 'thought_z1 ... is_z2+phi', '隐藏下标。z1、z2 等不显示，但会分别参与不同移位线匹配。'],
             ['t_i / trace_i', 't_i', 'trace 或空位标签，可与上方同标成分连线。'],
             ['=word=', '=read=_k', '删除线。旧写法 -word- 仍然兼容。'],
             ['*word*', '*where*_i', '斜体。'],
@@ -499,7 +499,7 @@ function help_content_data(): array
             ['@word@', '@he will go *where*@_i', '空心字。内部也可以继续使用斜体。'],
             ['v0 / X0', 'v0|read_k, C0', '0 显示为上标。v0 会显示为斜体 v 加上标 0。'],
             ['X1, X2', 'DP1', '末尾非零数字显示为下标。'],
-            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', '希腊字母。也支持 theta、lambda、omega 等。'],
+            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z1', '希腊字母。也支持 theta、lambda、omega 等。'],
             ['[^TP words]', '[^TP @he will go *where*@_i]', '三角形/roof 节点。下方文字从三角形左端开始对齐。'],
             ['点击树枝或移位线', '-', '显示可拖动端点。移位线有起点、终点和中间控制点。'],
         ], ['语法', '示例', '效果'], [
@@ -515,7 +515,7 @@ function help_content_data(): array
             ['[XP child child]', '[TP John [T\' T VP]]', '基本的な括弧ノードです。最初の項目がノードラベルで、後続の項目が子ノードです。'],
             ['A|B|C', 'T0|[+PST]|[+3SG]', '同じノード内で複数行に分けて表示します。'],
             ['_i, _j, _k', 'John_i', '斜体の下付き文字を表示します。同じ下付き文字は移動線を自動生成します。'],
-            ['_z', 'John_z ... t_z', '非表示の移動インデックスです。z は表示されませんが、移動線の照合には使われます。'],
+            ['_z1, _z2', 'thought_z1 ... is_z2+phi', '非表示の移動インデックスです。z1、z2 などは表示されませんが、別々の移動線照合に使われます。'],
             ['t_i / trace_i', 't_i', '移動に対応する trace または空所ラベルです。'],
             ['=word=', '=read=_k', '取り消し線です。旧形式 -word- も引き続き使えます。'],
             ['*word*', '*where*_i', '斜体です。'],
@@ -523,7 +523,7 @@ function help_content_data(): array
             ['@word@', '@he will go *where*@_i', '袋文字です。内部で斜体も併用できます。'],
             ['v0 / X0', 'v0|read_k, C0', '0 を上付きで表示します。v0 は斜体 v と上付き 0 で表示されます。'],
             ['X1, X2', 'DP1', '末尾の 0 以外の数字を下付きで表示します。'],
-            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', 'ギリシャ文字を表示します。theta、lambda、omega などにも対応します。'],
+            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z1', 'ギリシャ文字を表示します。theta、lambda、omega などにも対応します。'],
             ['[^TP words]', '[^TP @he will go *where*@_i]', '三角形 / roof ノードです。下の文字は三角形の左端から揃えて表示されます。'],
             ['枝または移動線をクリック', '-', 'ドラッグ可能な制御点を表示します。移動線には始点、終点、中間制御点があります。'],
         ], ['構文', '例', '効果'], [
@@ -539,7 +539,7 @@ function help_content_data(): array
             ['[XP child child]', '[TP John [T\' T VP]]', '기본 괄호 노드입니다. 첫 항목은 노드 라벨이고, 뒤의 항목들은 자식 노드입니다.'],
             ['A|B|C', 'T0|[+PST]|[+3SG]', '한 노드 안에서 여러 줄로 표시합니다.'],
             ['_i, _j, _k', 'John_i', '보이는 이탤릭 아래첨자를 표시합니다. 같은 아래첨자는 이동선을 자동 생성합니다.'],
-            ['_z', 'John_z ... t_z', '숨김 이동 인덱스입니다. z는 표시되지 않지만 이동선 매칭에는 사용됩니다.'],
+            ['_z1, _z2', 'thought_z1 ... is_z2+phi', '숨김 이동 인덱스입니다. z1, z2 등은 표시되지 않지만 서로 다른 이동선 매칭에 사용됩니다.'],
             ['t_i / trace_i', 't_i', '이동에 대응하는 trace 또는 빈자리 라벨입니다.'],
             ['=word=', '=read=_k', '취소선입니다. 기존 -word- 형식도 계속 사용할 수 있습니다.'],
             ['*word*', '*where*_i', '이탤릭체입니다.'],
@@ -547,7 +547,7 @@ function help_content_data(): array
             ['@word@', '@he will go *where*@_i', '윤곽 글자입니다. 내부에서 이탤릭체도 함께 사용할 수 있습니다.'],
             ['v0 / X0', 'v0|read_k, C0', '0을 위첨자로 표시합니다. v0는 이탤릭 v와 위첨자 0으로 표시됩니다.'],
             ['X1, X2', 'DP1', '끝의 0이 아닌 숫자는 아래첨자로 표시합니다.'],
-            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', '그리스 문자를 표시합니다. theta, lambda, omega 등도 지원합니다.'],
+            ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z1', '그리스 문자를 표시합니다. theta, lambda, omega 등도 지원합니다.'],
             ['[^TP words]', '[^TP @he will go *where*@_i]', '삼각형 / roof 노드입니다. 아래 텍스트는 삼각형 왼쪽 끝에 맞춰 표시됩니다.'],
             ['가지 또는 이동선 클릭', '-', '드래그 가능한 조절점을 표시합니다. 이동선에는 시작점, 끝점, 중간 조절점이 있습니다.'],
         ], ['구문', '예시', '효과'], [
@@ -562,7 +562,7 @@ function help_content_data(): array
         ['[XP child child]', '[TP John [T\' T VP]]', 'Basic bracketed node. The first item is the node label; following items are children.'],
         ['A|B|C', 'T0|[+PST]|[+3SG]', 'Multi-line node label.'],
         ['_i, _j, _k', 'John_i', 'Visible italic subscript. Matching indices create movement links.'],
-        ['_z', 'John_z ... t_z', 'Hidden movement index. It creates movement links but the z is not shown.'],
+        ['_z1, _z2', 'thought_z1 ... is_z2+phi', 'Hidden movement indices. z1, z2, etc. are not shown, but each creates its own movement links.'],
         ['t_i / trace_i', 't_i', 'Trace labels for movement.'],
         ['=word=', '=read=_k', 'Strikethrough. The older -word- form is still accepted.'],
         ['*word*', '*where*_i', 'Italic text.'],
@@ -570,7 +570,7 @@ function help_content_data(): array
         ['@word@', '@he will go *where*@_i', 'Outline text. Can be combined with italic text inside.'],
         ['v0 / X0', 'v0|read_k, C0', 'Superscript 0. v0 displays italic v plus superscript 0.'],
         ['X1, X2', 'DP1', 'Trailing non-zero digits become subscripts.'],
-        ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z', 'Greek letters. Also supports theta, lambda, omega, etc.'],
+        ['alpha, beta, gamma, phi', 'alpha_i, phi+thought_z1', 'Greek letters. Also supports theta, lambda, omega, etc.'],
         ['[^TP words]', '[^TP @he will go *where*@_i]', 'Triangle / roof node. Text starts at the left base of the triangle.'],
         ['Click branch / movement line', '-', 'Shows draggable handles for manual adjustment. Movement lines have start, end, and control handles.'],
     ], ['Syntax', 'Example', 'Effect'], [
@@ -610,7 +610,7 @@ function render_help_sections(array $rows, array $heads, array $notes): void
     <section class="help-section">
         <h3><?= e(t('help_examples')) ?></h3>
         <pre class="help-code">[CP Which-book_i [C' C0|did [TP John_j [T' T0|[+PST] [vP =John=_j [v' v0|read_k [VP =read=_k t_i]]]]]]]</pre>
-        <pre class="help-code">[CP PRN|Where_i [C' C0|is+phi [TP PRN|it [T' T0|=*is*= [vP v0|phi+thought_z [VP V0|thought_z [CP PRN|*where*_i [C' C0|that [^TP @he will go *where*@_i ]]]]]]]]]</pre>
+        <pre class="help-code">[CP PRN|Where_i [C' C0|is_z2+phi [TP PRN|it [T' T0|=*is*=_z2 [vP v0|phi+thought_z1 [VP V0|thought_z1 [CP PRN|*where*_i [C' C0|that [^TP @he will go *where*@_i ]]]]]]]]]</pre>
     </section>
     <section class="help-section">
         <h3><?= e(t('help_notes')) ?></h3>
@@ -646,7 +646,7 @@ function render_syntax_reference_panel(): void
 {
     $rows = [
         ['John_i', 'John<sub>i</sub>'],
-        ['John_z', 'John'],
+        ['John_z1', 'John'],
         ['=read=', '<span class="syntax-strike">read</span>'],
         ['*where*', '<em>where</em>'],
         ['=*read*=', '<span class="syntax-strike"><em>read</em></span>'],
