@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^admin\.php$ - [R=404,L]

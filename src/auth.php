@@ -55,6 +55,11 @@ function handle_email_login(): void
     require_csrf();
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
+    $ipAddress = client_ip_address();
+    if (login_attempt_rate_limited($email, $ipAddress)) {
+        flash('error', 'Too many failed sign-in attempts. Please wait 15 minutes and try again.');
+        redirect('index.php?action=login');
+    }
     $user = $email !== '' ? find_user_by_email($email) : null;
 
     if (!$user || !$user['password_hash'] || !password_verify($password, $user['password_hash'])) {
@@ -80,8 +85,15 @@ function handle_register(): void
     $name = trim((string) ($_POST['name'] ?? ''));
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
+    $website = trim((string) ($_POST['website'] ?? ''));
+    $ipAddress = client_ip_address();
 
-    if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 8) {
+    if ($website !== '' || registration_rate_limited($ipAddress)) {
+        flash('error', 'Registration is temporarily unavailable from this network. Please try again later.');
+        redirect('index.php?action=register');
+    }
+
+    if ($name === '' || mb_strlen($name) > 120 || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 8) {
         flash('error', 'Use a valid name, email, and a password of at least 8 characters.');
         redirect('index.php?action=register');
     }
