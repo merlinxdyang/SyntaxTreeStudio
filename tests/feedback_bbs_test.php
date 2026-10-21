@@ -48,6 +48,8 @@ foreach ($requiredFunctions as $function) {
 }
 
 $pdo = db();
+$pdo->prepare('INSERT INTO admin_accounts (username, password_hash) VALUES (?, ?)')
+    ->execute(['bbs-test-admin', password_hash(bin2hex(random_bytes(24)), PASSWORD_DEFAULT)]);
 init_schema($pdo);
 $columns = array_column($pdo->query('PRAGMA table_info(feedback_messages)')->fetchAll(), 'name');
 foreach (['status', 'published_at', 'edited_at', 'deleted_at'] as $column) {

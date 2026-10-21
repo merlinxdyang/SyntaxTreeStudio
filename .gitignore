@@ -4,3 +4,14 @@ dist/
 *.log
 .env
 .env.local
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+*.db
+*.db-*
+*.sql
+*.dump
+*.bak

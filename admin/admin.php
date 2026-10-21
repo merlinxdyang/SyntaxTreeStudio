@@ -108,9 +108,16 @@ function admin_handle_login(): void
     require_csrf();
     $username = trim((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
+    // Only the socket peer is trusted; client-supplied forwarding headers cannot reset this limit.
+    $peerAddress = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    if (admin_login_rate_limited($username, $peerAddress)) {
+        flash('error', 'Too many failed sign-in attempts. Please wait 15 minutes and try again.');
+        redirect('admin.php');
+    }
     $admin = find_standalone_admin($username);
 
     if (!$admin || !password_verify($password, $admin['password_hash'])) {
+        record_admin_login_failure($username, $peerAddress);
         flash('error', 'Admin username or password is incorrect.');
         redirect('admin.php');
     }

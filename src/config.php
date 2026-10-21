@@ -2,7 +2,15 @@
 declare(strict_types=1);
 
 const APP_NAME = 'Syntree';
-const DB_PATH = __DIR__ . '/../data/syntree.sqlite';
+// Keep existing installations compatible; production should use a private absolute path.
+$databasePath = getenv('SYNTREE_DB_PATH');
+if ($databasePath !== false && $databasePath !== '' && $databasePath[0] !== '/') {
+    throw new RuntimeException('SYNTREE_DB_PATH must be an absolute path.');
+}
+define('DB_PATH', $databasePath !== false && $databasePath !== ''
+    ? $databasePath
+    : __DIR__ . '/../data/syntree.sqlite');
+unset($databasePath);
 const SESSION_NAME = 'syntree_session';
 
 const OAUTH_PROVIDERS = [

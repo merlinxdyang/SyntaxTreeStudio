@@ -1,2 +1,8 @@
+Options -Indexes
 RewriteEngine On
 RewriteRule ^admin\.php$ - [R=404,L]
+RewriteRule ^(?:data|src|scripts|tests)(?:/|$) - [F,L,NC]
+RewriteRule (^|/)\. - [F,L]
+<FilesMatch "(?i)\.(?:sqlite(?:3)?|db)(?:-(?:wal|shm|journal))?$|\.(?:bak|sql|dump|log|env)$">
+    Require all denied
+</FilesMatch>

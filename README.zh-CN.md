@@ -90,16 +90,19 @@ php -S 127.0.0.1:8082
 - Workspace：<http://127.0.0.1:8082/index.php?action=workspace>
 - 管理员后台：<http://127.0.0.1:8082/admin/admin.php>
 
-第一次访问时，程序会自动创建 `data/syntree.sqlite`。运行时数据库和用户上传的反馈图片不会进入 Git 版本控制。
+第一次访问时，程序会创建 `data/syntree.sqlite`；可通过 `SYNTREE_DB_PATH` 指定绝对路径。运行时数据库和用户上传的反馈图片不会进入 Git 版本控制。
 
-新数据库默认建立的独立管理员账号为：
+程序不再创建默认管理员，也没有默认密码。在服务器命令行使用至少 16 个字符的独立密码创建管理员：
 
-```text
-用户名：admin
-密码：Admin123456
+```bash
+read -r -s -p 'New administrator password: ' SYNTREE_ADMIN_INPUT; printf '\n'
+printf '%s\n' "$SYNTREE_ADMIN_INPUT" | php scripts/set-admin-password.php admin
+unset SYNTREE_ADMIN_INPUT
 ```
 
-在本地开发以外的环境开放网站前，必须立即进入管理员后台的 Security 页面修改密码。
+已有管理员也可用同一命令重设密码。现有安装必须立即更换曾公开的默认密码；仅更新仓库不会更改已有密码，也不会自动部署服务器防护。
+
+数据库迁移、Apache/Nginx 访问限制及验证方法见[安全部署说明](docs/SECURE_DEPLOYMENT.md)。PHP 开发服务器不读取 `.htaccess`，仅应绑定本机地址。
 
 ## 验证代码
 

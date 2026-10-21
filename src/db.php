@@ -76,6 +76,14 @@ function init_schema(PDO $pdo): void
             updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE IF NOT EXISTS admin_login_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            peer_address TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE INDEX IF NOT EXISTS idx_admin_login_attempts_created ON admin_login_attempts(created_at);
+
         CREATE TABLE IF NOT EXISTS visitor_country_cache (
             ip_address TEXT PRIMARY KEY,
             country_code TEXT,
@@ -196,7 +204,6 @@ function init_schema(PDO $pdo): void
     $pdo->exec('CREATE INDEX IF NOT EXISTS idx_feedback_messages_user_created ON feedback_messages(user_id, created_at DESC)');
 
     seed_site_settings($pdo);
-    seed_standalone_admin($pdo);
 }
 
 function ensure_table_column(PDO $pdo, string $table, string $column, string $definition): void
@@ -428,21 +435,24 @@ function recent_tree_records(int $userId): array
     return $stmt->fetchAll();
 }
 
-function seed_standalone_admin(PDO $pdo): void
+// Administrator accounts are provisioned only through scripts/set-admin-password.php.
+function admin_login_rate_limited(string $username, string $peerAddress): bool
 {
-    $exists = (int) $pdo->query("SELECT COUNT(*) FROM admin_accounts WHERE username = 'admin'")->fetchColumn();
-    if ($exists > 0) {
-        return;
-    }
+    $stmt = db()->prepare("
+        SELECT COUNT(*) FROM admin_login_attempts
+        WHERE created_at >= datetime('now', '-15 minutes')
+          AND (username = :username OR peer_address = :peer_address)
+    ");
+    $stmt->execute([':username' => $username, ':peer_address' => $peerAddress]);
+    return (int) $stmt->fetchColumn() >= 10;
+}
 
-    $stmt = $pdo->prepare('
-        INSERT INTO admin_accounts (username, password_hash)
-        VALUES (:username, :password_hash)
-    ');
-    $stmt->execute([
-        ':username' => 'admin',
-        ':password_hash' => password_hash('Admin123456', PASSWORD_DEFAULT),
-    ]);
+function record_admin_login_failure(string $username, string $peerAddress): void
+{
+    $pdo = db();
+    $pdo->exec("DELETE FROM admin_login_attempts WHERE created_at < datetime('now', '-1 day')");
+    $pdo->prepare('INSERT INTO admin_login_attempts (username, peer_address) VALUES (:username, :peer_address)')
+        ->execute([':username' => $username, ':peer_address' => $peerAddress]);
 }
 
 function find_standalone_admin(string $username): ?array

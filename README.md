@@ -90,16 +90,19 @@ Open:
 - Workspace: <http://127.0.0.1:8082/index.php?action=workspace>
 - Administrator: <http://127.0.0.1:8082/admin/admin.php>
 
-SQLite is created automatically at `data/syntree.sqlite` on first access. Runtime databases and uploaded feedback images are excluded from version control.
+SQLite is created automatically at `data/syntree.sqlite` unless `SYNTREE_DB_PATH` specifies an absolute path. Runtime databases and uploaded feedback images are excluded from version control.
 
-The standalone administrator seeded on a new database is:
+There is no default administrator or default password. Create an administrator from the server command line with a unique password of at least 16 characters:
 
-```text
-Username: admin
-Password: Admin123456
+```bash
+read -r -s -p 'New administrator password: ' SYNTREE_ADMIN_INPUT; printf '\n'
+printf '%s\n' "$SYNTREE_ADMIN_INPUT" | php scripts/set-admin-password.php admin
+unset SYNTREE_ADMIN_INPUT
 ```
 
-Change this password immediately from the administrator Security page before exposing the application outside local development.
+Run the same command to reset an existing administrator's password. Existing installations must rotate any previously published default password immediately. Updating the repository alone does not change existing passwords or deploy server protections.
+
+For production database relocation, Apache/Nginx access controls, and verification steps, follow [secure deployment instructions](docs/SECURE_DEPLOYMENT.md). PHP's development server ignores `.htaccess`; bind it to loopback only.
 
 ## Validate the Code
 
