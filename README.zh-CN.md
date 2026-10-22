@@ -9,6 +9,62 @@ Merlin 的句法树形图生成器是一个面向语言学研究者、句法课�
 - 开发者：**Merlin X. D. Yang**
 - 开源许可证：[MIT](LICENSE)
 
+## 灵感来源与致谢
+
+Merlin X. D. Yang 受到 [mshang/syntree](https://github.com/mshang/syntree) 的启发，创建了 Merlin 的句法树形图生成器。感谢 mshang 开发原有的浏览器句法树工具。
+
+原项目采用 [MIT 协议](https://github.com/mshang/syntree/blob/gh-pages/LICENSE.txt)，允许使用、修改、分发及商业使用。分发其代码的副本或重要部分时，必须保留原版权声明和许可声明，包括免责声明。仅受到设计启发不会自动产生这项代码分发义务；如复用了原项目代码，则须遵守该要求。
+
+为便于查阅并保留原声明，下面完整收录原项目的协议文件及其中的第三方库声明。这些库声明描述的是原项目，并不表示 Merlin 的句法树形图生成器使用了这些库；如分发相应第三方代码，也须保留各自协议要求的声明。
+
+<details>
+<summary>原 syntree 的版权、许可及第三方库声明</summary>
+
+```text
+Copyright (C) 2011 by mshang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+This software uses the following libraries:
+
+base64.js
+	Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+	Version: 1.0
+	LastModified: Dec 25 1999
+	This library is free.  You can redistribute it and/or modify it.
+
+canvas2image.js
+	Canvas2Image v0.1
+	Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk
+	MIT License [http://www.opensource.org/licenses/mit-license.php]
+
+jQuery v1.7.1
+	Copyright (c) 2011 John Resig, http://jquery.com/
+	MIT license [jquery.org/license]
+	
+jQuery UI v1.8.18
+	Copyright (c) 2011 Paul Bakaus, http://jqueryui.com/
+	MIT license [jquery.org/license]
+```
+
+</details>
+
 ## 当前功能
 
 ### 树形图编辑
