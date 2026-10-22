@@ -9,6 +9,62 @@ Merlin's Syntax Studio is a free browser-based syntax tree generator for linguis
 - Developer: **Merlin X. D. Yang**
 - License: [MIT](LICENSE)
 
+## Inspiration and Acknowledgements
+
+Merlin's Syntax Studio was created by Merlin X. D. Yang, inspired by [mshang/syntree](https://github.com/mshang/syntree). Thank you to mshang for the original browser-based syntax tree tool.
+
+The original project uses the [MIT License](https://github.com/mshang/syntree/blob/gh-pages/LICENSE.txt), which permits use, modification, distribution, and commercial use. Copies or substantial portions of its software must retain its copyright notice and permission notice, including the warranty disclaimer. Inspiration alone does not impose this code-redistribution requirement; any reused original code remains subject to it.
+
+For reference and preservation, the original project's complete license file is reproduced below, including its third-party library notices. Those library notices describe the original project and do not by themselves indicate dependencies of Merlin's Syntax Studio. Any redistributed third-party code must also retain the notices required by its own license.
+
+<details>
+<summary>Original syntree copyright, license, and third-party notices</summary>
+
+```text
+Copyright (C) 2011 by mshang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+This software uses the following libraries:
+
+base64.js
+	Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+	Version: 1.0
+	LastModified: Dec 25 1999
+	This library is free.  You can redistribute it and/or modify it.
+
+canvas2image.js
+	Canvas2Image v0.1
+	Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk
+	MIT License [http://www.opensource.org/licenses/mit-license.php]
+
+jQuery v1.7.1
+	Copyright (c) 2011 John Resig, http://jquery.com/
+	MIT license [jquery.org/license]
+	
+jQuery UI v1.8.18
+	Copyright (c) 2011 Paul Bakaus, http://jqueryui.com/
+	MIT license [jquery.org/license]
+```
+
+</details>
+
 ## Current Features
 
 ### Tree editing
